@@ -1,4 +1,4 @@
-**CMPS405 Project**
+**CMPS405 Project phase 1**
 
 - Project Overview:
   -   This project focuses on automating various server and client configuration tasks using shell scripting. The main objectives are:
