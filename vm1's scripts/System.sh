@@ -10,6 +10,6 @@ echo "Memory Usage:" >> $memCpuLog
 echo "The precentage of the total memory used is: $((memoryused*100/memorytotal))%" >> $memCpuLog
 echo "The precentage of the total free memory space is: $((memoryfree*100/memorytotal))%" >>$memCpuLog
  #the file that have the cpu model name is /proc/cpouinfo and it appears twice ---> grep and only take it once
- echo "$(grep -m 1 'model name' /proc/cpuinfo)" >> $memCpuLog
- echo "$(grep -m 1 'cpu cores' /proc/cpuinfo)" >> $memCpuLog
+ echo "CPU model: $(grep -m 1 'model name' /proc/cpuinfo | awk -F ': ' '{print $2}') " >> $memCpuLog
+ echo "Number of CPU cores: $(grep -m 1 'cpu cores' /proc/cpuinfo | awk -F ': ' '{print $2}')" >> $memCpuLog
  cat $diskLog $memCpuLog
