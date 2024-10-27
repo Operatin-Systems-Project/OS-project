@@ -42,8 +42,6 @@ ping_client_to_server(){
 	done
 }
 for target_IP in "$@"; do
-	test_ping "$target_IP" # loop to go through the arguments 
-done
-for target_IP in "$@"; do
-	ping_client_to_server "$target_IP" # loop to go through the arguments 
+	test_ping "$target_IP" # ping server to clients
+	ping_client_to_server "$target_IP"  # ping clients to server
 done
