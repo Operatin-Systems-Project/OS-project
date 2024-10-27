@@ -1,6 +1,8 @@
 diskLog="disk_info.log" > "$diskLog"
 memCpuLog="mem_cpu_int.log" > "$memCpuLog"
-df -h ~ >> $diskLog
+echo "Disk info:"
+echo "Disk Space: $(df -h ~ | awk '{print $2}' | grep '[0-9]')" >> $diskLog
+echo "Disk Usage: $(df -h ~ | awk '{print $3}' | grep '[0-9]')" >> $diskLog
 memorytotal=$(free | grep Mem | awk '{print $2}')
 memoryused=$(free | grep Mem | awk '{print $3}')
 memoryfree=$(free | grep Mem | awk '{print $4}')
