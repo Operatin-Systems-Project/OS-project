@@ -1,13 +1,13 @@
 serverIp="192.168.18.2"
 maxAttempts=3
 logInvalidAttempt() {
-	local timestamp=$(date +"%F %H-%M-%S")
+	local timestamp=$(date +"%F_%H:%M:%S")
 	echo "Invalid login attempt by $1 at $timestamp" >> invalid_attempts.log
 
 }
 
 tryLogin() {
-	ssh -o NumberOfPasswordPrompts=1 $1@$serverIp 2>>/dev/null
+	ssh -o NumberOfPasswordPrompts=1 -o PubkeyAuthentication=no $1@$serverIp 2>>/dev/null
 	if [[ $? -eq 0 ]]; then
 		return 0
 	else
@@ -17,9 +17,9 @@ tryLogin() {
 }
 
 transferLog() {
-	local timestamp=$(date +"%F %H-%M-%S")
-	sftp -i ~/.ssh/logger_key logger@$serverIp << EOF 1>>/dev/null
-put invalid_attempts.log $1_$timestamp_invalid_attempts.log
+	local timestamp=$(date +"%F_%H:%M:%S")
+	sftp -i ~/.ssh/$1_key $1@$serverIp << EOF &>/dev/null
+put invalid_attempts.log logs/"$1_${timestamp}_invalid_attempts.log"
 bye
 EOF
 }
@@ -34,7 +34,7 @@ main(){
 			echo "Wrong password"
 			((attempts++))
 		else
-			echo "Access Granted"
+			echo "Access was granted"
 			exit 0
 		fi
 	done
