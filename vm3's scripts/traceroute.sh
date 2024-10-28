@@ -1,16 +1,13 @@
-check_ping() {
-    ping -c 1 google.com &> /dev/null
-
-    if [ $? -eq 0 ]; then
-        return 0
-    else
-        return 1
-    fi
-}
-if ! check_ping; then
     echo "routing table"route -n
     echo "hostname"hostname
-    echo "testing DNS server (8.8.8.8)"
-nslookup google.com 8.8.8.8
+    echo "testing DNS server"
+    LOCAL_DNS=$(grep 'nameserver' /etc/resolv.conf | awk '{print $2}' | head -n 1)
+   nlookup google.com $LOCAL_DNS
     echo "Tracing route to google.com"traceroute google.com
-    sudo reboot
+    ping -c 1 google.com &> /dev/null
+    
+
+
+if !traceroute -m 30 $DESTINATION > /dev/null;then 
+sudoroot
+fi
