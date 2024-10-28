@@ -1,15 +1,15 @@
-diskLog="disk_info.log"
-memCpuLog="mem_cpu_int.log"
-> "$disk_log"
-> "$mem_cpu_log"
-du -h $HOME | tee -a "$diskLog"
-df -h $HOME | tee -a "$diskLog"
+diskLog="disk_info.log" > "$diskLog"
+memCpuLog="mem_cpu_int.log" > "$memCpuLog"
+echo "Disk info:"
+echo "Disk Space: $(df -h ~ | awk '{print $2}' | grep '[0-9]')" >> $diskLog
+echo "Disk Usage: $(df -h ~ | awk '{print $3}' | grep '[0-9]')" >> $diskLog
 memorytotal=$(free | grep Mem | awk '{print $2}')
 memoryused=$(free | grep Mem | awk '{print $3}')
 memoryfree=$(free | grep Mem | awk '{print $4}')
-echo "Memory Usage:" | tee -a "$memCpuLog"
-echo "The precentage of the total memory used is: $((memoryused*100/memorytotal))%" | tee -a "$memCpuLog"
-echo "The precentage of the total free memory space is: $((memoryfree*100/memorytotal))%" | tee -a "$memCpuLog"
+echo "Memory Usage:" >> $memCpuLog
+echo "The precentage of the total memory used is: $((memoryused*100/memorytotal))%" >> $memCpuLog
+echo "The precentage of the total free memory space is: $((memoryfree*100/memorytotal))%" >>$memCpuLog
  #the file that have the cpu model name is /proc/cpouinfo and it appears twice ---> grep and only take it once
- cpumodelnameCommand=$(grep -m 1 'model name' /proc/cpuinfo)
-
+ echo "CPU model: $(grep -m 1 'model name' /proc/cpuinfo | awk -F ': ' '{print $2}') " >> $memCpuLog
+ echo "Number of CPU cores: $(grep -m 1 'cpu cores' /proc/cpuinfo | awk -F ': ' '{print $2}')" >> $memCpuLog
+ cat $diskLog $memCpuLog
