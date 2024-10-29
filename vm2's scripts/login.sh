@@ -1,3 +1,4 @@
+#!/bin/bash
 serverIp="192.168.18.2"
 maxAttempts=3
 logInvalidAttempt() {
