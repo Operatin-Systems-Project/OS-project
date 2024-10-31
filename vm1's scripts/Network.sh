@@ -20,10 +20,22 @@ test_ping(){
 		else 
 			echo "Connectivity with $target_IP is not working" >> $log_file
 			echo "Running traceroute.sh" >> $log_file
-			./traceroute.sh "$target_IP" >> $log_file   #here call the traceroute ( still didnt do the traceroute )
+			./traceroute.sh $target_IP >> $log_file  
 		fi	
 	done
 
 }
+checkinstall(){
+	echo "Checking if net tools are installed....."
+	if ! command -v ifconfig &> /dev/null; then
+		echo "Installing tools.........."
+		echo "Enter the password to install the package"
+		sudo apt upgrade
+		sudo apt install net-tools
+	else
+		echo "Tools are installed"
+	fi
+}
+checkinstall
 test_ping
 cat $log_file
