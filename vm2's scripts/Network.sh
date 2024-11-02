@@ -20,7 +20,7 @@ test_ping(){
 		else 
 			echo "Connectivity with $target_IP is not working" >> $log_file
 			echo "Running traceroute.sh" >> $log_file
-			./traceroute.sh $target_IP >> $log_file  
+			./traceroute.sh $target_IP 
 		fi	
 	done
 
