@@ -8,6 +8,6 @@
     
 
 
-if !traceroute -m 30 $DESTINATION > /dev/null;then 
+if !traceroute -m 30 $1 > /dev/null;then 
 sudoroot
 fi
