@@ -25,24 +25,42 @@ test_ping(){
 	done
 
 }
-checkallinstall(){
-
-	declare -a packageArray=(nslookup traceroute ifconfig)
-	for package in "${packageArray[@]}";do
-		if ! command -v $package &> /dev/null; then
-			if [ "$EUID" -ne 0 ];then
-			echo "Enter the password to install the $package package"
-			sudo apt upgrade
-			sudo apt install $package
-
-			else 
-				sudo apt upgrade
-				sudo apt install $package
-			fi
-		fi
-	done
+checknettools(){
+	echo "Checking if net tools package is installed....."
+	if ! command -v ifconfig &> /dev/null; then
+		echo "Installing tools.........."
+		echo "Enter the password to install the package"
+		sudo apt upgrade
+		sudo apt install net-tools
+	else
+		echo "Net-Tools are installed"
+	fi
+}
+checkTraceroute(){
+	echo "Checking if traceroute package is installed....."
+	if ! command -v traceroute &> /dev/null; then
+		echo "Installing tools.........."
+		echo "Enter the password to install the package"
+		sudo apt upgrade
+		sudo apt install traceroute
+	else
+		echo "traceroute package is installed"
+	fi
+}
+checknslookup(){
+	echo "Checking if nslookup package is installed....."
+	if ! command -v nslookup &> /dev/null; then
+		echo "Installing tools.........."
+		echo "Enter the password to install the package"
+		sudo apt upgrade
+		sudo apt install nslookup
+	else
+		echo "nslookup is installed"
+	fi
 
 }
-checkallinstall
+checknettools
+checkTraceroute
+checknslookup
 test_ping
 cat $log_file
