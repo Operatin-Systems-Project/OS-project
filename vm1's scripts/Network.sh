@@ -26,36 +26,39 @@ test_ping(){
 
 }
 checknettools(){
-	echo "Checking if net tools package is installed....."
 	if ! command -v ifconfig &> /dev/null; then
-		echo "Installing tools.........."
-		echo "Enter the password to install the package"
-		sudo apt upgrade
-		sudo apt install net-tools
-	else
-		echo "Net-Tools are installed"
+		if [ "$EUID" -ne 0 ];then 
+			echo "Enter the password to install the net tools package"
+			sudo apt upgrade
+			sudo apt install net-tools
+		else 
+			sudo apt upgrade
+			sudo apt install net-tools
+		fi
 	fi
 }
 checkTraceroute(){
-	echo "Checking if traceroute package is installed....."
 	if ! command -v traceroute &> /dev/null; then
-		echo "Installing tools.........."
-		echo "Enter the password to install the package"
-		sudo apt upgrade
-		sudo apt install traceroute
-	else
-		echo "traceroute package is installed"
+		if [ "$EUID" -ne 0 ];then 
+			echo "Enter the password to install the traceroute package"
+			sudo apt upgrade
+			sudo apt install traceroute
+		else 
+			sudo apt upgrade
+			sudo apt install traceroute
+		fi
 	fi
 }
 checknslookup(){
-	echo "Checking if nslookup package is installed....."
 	if ! command -v nslookup &> /dev/null; then
-		echo "Installing tools.........."
-		echo "Enter the password to install the package"
-		sudo apt upgrade
-		sudo apt install nslookup
-	else
-		echo "nslookup is installed"
+		if [ "$EUID" -ne 0 ];then
+			echo "Enter the password to install the nslookup package"
+			sudo apt upgrade
+			sudo apt install nslookup
+		else 
+			sudo apt upgrade
+			sudo apt install nslookup
+		fi
 	fi
 
 }
