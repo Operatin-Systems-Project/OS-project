@@ -27,43 +27,19 @@ test_ping(){
 }
 checknettools(){
 	if ! command -v ifconfig &> /dev/null; then
-		if [ "$EUID" -ne 0 ];then 
-			echo "Enter the password to install the net tools package"
+			echo "installing net tools package"
 			sudo apt upgrade
 			sudo apt install net-tools
-		else 
-			sudo apt upgrade
-			sudo apt install net-tools
-		fi
 	fi
 }
 checkTraceroute(){
 	if ! command -v traceroute &> /dev/null; then
-		if [ "$EUID" -ne 0 ];then 
-			echo "Enter the password to install the traceroute package"
+			echo "installing traceroute package"
 			sudo apt upgrade
 			sudo apt install traceroute
-		else 
-			sudo apt upgrade
-			sudo apt install traceroute
-		fi
 	fi
-}
-checknslookup(){
-	if ! command -v nslookup &> /dev/null; then
-		if [ "$EUID" -ne 0 ];then
-			echo "Enter the password to install the nslookup package"
-			sudo apt upgrade
-			sudo apt install nslookup
-		else 
-			sudo apt upgrade
-			sudo apt install nslookup
-		fi
-	fi
-
 }
 checknettools
 checkTraceroute
-checknslookup
 test_ping
 cat $log_file
