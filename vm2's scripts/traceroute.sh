@@ -1,13 +1,19 @@
-    echo "routing table"route -n
-    echo "hostname"hostname
-    echo "testing DNS server"
+  Log="network.log"
+   logandprint() {
+    echo "$1" | tee -a $Log
+}
+
+    logandprint "routing table"
+     logandprint "$(route -n)"
+    logandprint "hostname"
+    logandprint "$(hostname)"
+    logandprint "testing DNS server"
     LOCAL_DNS=$(grep 'nameserver' /etc/resolv.conf | awk '{print $2}' | head -n 1)
-   nslookup google.com $LOCAL_DNS
-    echo "Tracing route to google.com"traceroute google.com
-    ping -c 1 google.com &> /dev/null
+     logandprint "$(nslookup google.com $LOCAL_DNS)"
+    logandprint "Tracing route to google.com"
+     logandprint "$(traceroute google.com)"
+    logandprint "$(ping -c 1 google.com &> /dev/null)"
     
-
-
-if !traceroute -m 30 $1 > /dev/null;then 
-sudo reboot
+if   !(traceroute -m 30 $1 > /dev/null);then 
+  logandprint "$(sudo reboot)"
 fi
