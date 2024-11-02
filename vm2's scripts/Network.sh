@@ -25,17 +25,42 @@ test_ping(){
 	done
 
 }
-checkinstall(){
-	echo "Checking if net tools are installed....."
+checknettools(){
+	echo "Checking if net tools package is installed....."
 	if ! command -v ifconfig &> /dev/null; then
 		echo "Installing tools.........."
 		echo "Enter the password to install the package"
 		sudo apt upgrade
 		sudo apt install net-tools
 	else
-		echo "Tools are installed"
+		echo "Net-Tools are installed"
 	fi
 }
-checkinstall
+checkTraceroute(){
+	echo "Checking if traceroute package is installed....."
+	if ! command -v traceroute &> /dev/null; then
+		echo "Installing tools.........."
+		echo "Enter the password to install the package"
+		sudo apt upgrade
+		sudo apt install traceroute
+	else
+		echo "traceroute package is installed"
+	fi
+}
+checknslookup(){
+	echo "Checking if nslookup package is installed....."
+	if ! command -v nslookup &> /dev/null; then
+		echo "Installing tools.........."
+		echo "Enter the password to install the package"
+		sudo apt upgrade
+		sudo apt install nslookup
+	else
+		echo "nslookup is installed"
+	fi
+
+}
+checknettools
+checkTraceroute
+checknslookup
 test_ping
 cat $log_file
