@@ -14,6 +14,12 @@
      logandprint "$(traceroute google.com)"
     logandprint "$(ping -c 1 google.com &> /dev/null)"
     
-if   !(traceroute -m 30 $1 > /dev/null);then 
-  logandprint "$(sudo reboot)"
+traceroute_output=$(traceroute -m 30 "$TARGET_IP" 2>&1)
+logandprint "$traceroute_output"
+last_line=$(echo "$traceroute_output" | tail -n 1)
+if echo "$last_line" | grep -q "$TARGET_IP"; then
+    logandprint "Successfully traced route to $TARGET_IP"
+else
+    logandprint "Unable to reach $TARGET_IP via traceroute. Rebooting..."
+    sudo reboot
 fi
