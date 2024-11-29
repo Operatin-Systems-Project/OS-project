@@ -11,13 +11,26 @@ public class Client1 {
     static PrintWriter to_server = null;
     static BufferedReader catoutput = null;
     static Scanner from_user;
-    
+    	 public  String runScript(String script) throws IOException {
+	    	ProcessBuilder pbNetwork = new ProcessBuilder("bash","/home/vm2/"+script);  
+	        pbNetwork.redirectErrorStream(true);  
+	        Process Networkprocess = pbNetwork.start();  
+	        BufferedReader read = new BufferedReader(new InputStreamReader(Networkprocess.getInputStream()));
+	        String output = "";
+	        String line;
+	        while ((line = read.readLine()) != null) {
+	            output=line+"\n";
+	        }
+	        
+	        return output;
+	    }
     public static void main(String args[]) {
 
         try {
+               System.out.println(runScript("login.sh"));
+	        	System.out.println(runScript("check.sh"));
             Socket client1 = new Socket("192.168.10.12", 1300);
             //Socket client1 = new Socket("localhost", 1300);
-
             String serverMessage;
             String userInput = null;
             from_user = new Scanner(System.in);
