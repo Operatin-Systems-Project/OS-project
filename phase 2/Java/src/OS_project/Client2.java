@@ -1,4 +1,4 @@
-package OS_project;
+package os;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -15,8 +15,8 @@ public class Client2 {
 	public static void main(String args[]) {
 
 		try {
-//			Socket client1 = new Socket("192.168.10.12", 1300);
-			Socket client1 = new Socket("localhost", 1300);
+			Socket client1 = new Socket("192.168.10.12", 1300);
+			//Socket client1 = new Socket("localhost", 1300);
 
 			String serverMessage;
 			String userInput = null;

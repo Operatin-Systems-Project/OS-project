@@ -13,22 +13,22 @@ import java.util.Properties;
 public class InfoService {
 
     public synchronized void transferFile(Socket nextClient) {
-    	String IP = nextClient.getInetAddress().getHostAddress();		
-    	BufferedReader from_client;
-    	String clientusername;
-    	JSch jsch = new JSch();
-    	Session session = null;
-    	ChannelSftp channelSftp = null;
-    	PrintWriter to_server =  null;
-    	String password = null;
-    	
+        String IP = nextClient.getInetAddress().getHostAddress();       
+        BufferedReader from_client;
+        String clientusername;
+        JSch jsch = new JSch();
+        Session session = null;
+        ChannelSftp channelSftp = null;
+        PrintWriter to_server =  null;
+        String password = null;
+        
         try {
             // Initialize streams for communication with the client
-        	
-        	System.out.println("InfoService is running.....");
-        	
+            
+            System.out.println("InfoService is running.....");
+            
             from_client = new BufferedReader(new InputStreamReader(nextClient.getInputStream()));
-			to_server = new PrintWriter(nextClient.getOutputStream());
+            to_server = new PrintWriter(nextClient.getOutputStream());
 
             
             clientusername=from_client.readLine();
@@ -36,12 +36,13 @@ public class InfoService {
             ProcessBuilder SystemRunCommand = new ProcessBuilder("bash", "/home/vm1/System.sh");
             SystemRunCommand.redirectOutput(outputFile);
             SystemRunCommand.redirectErrorStream(true); // Combine standard error and output streams
-			Process Systeminfo = SystemRunCommand.start();
-			Systeminfo.waitFor();
-			to_server.println("Enter password: ");
-			password = from_client.readLine();
-			Thread.sleep(500);
+            Process Systeminfo = SystemRunCommand.start();
+            Systeminfo.waitFor();
+            Thread.sleep(500);
             session = jsch.getSession(clientusername, IP, 22);
+            to_server.println("Enter password: ");
+            to_server.flush();
+            password = from_client.readLine();
             session.setPassword(password);
             Properties config = new Properties();
             config.put("StrictHostKeyChecking", "no");
@@ -59,7 +60,7 @@ public class InfoService {
         }finally {
             // Disconnect the channel and session
             if (channelSftp != null) {
-            	channelSftp.disconnect();
+                channelSftp.disconnect();
             }
             if (session != null) {
                 session.disconnect();
