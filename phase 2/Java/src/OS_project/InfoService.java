@@ -24,6 +24,9 @@ public class InfoService {
     	
         try {
             // Initialize streams for communication with the client
+        	
+        	System.out.println("InfoService is running.....");
+        	
             from_client = new BufferedReader(new InputStreamReader(nextClient.getInputStream()));
 			to_server = new PrintWriter(nextClient.getOutputStream());
 
@@ -51,7 +54,7 @@ public class InfoService {
             File file = new File("/home/vm1/info.txt");
             channelSftp.put(new FileInputStream(outputFile), outputFile.getName());
 
-        } catch (IOException | JSchException | SftpException | InterruptedException e) {
+        } catch (Exception e) {
             System.err.println("Error initializing client communication streams: " + e.getMessage());
         }finally {
             // Disconnect the channel and session

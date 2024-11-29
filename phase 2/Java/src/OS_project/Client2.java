@@ -15,29 +15,34 @@ public class Client2 {
 	public static void main(String args[]) {
 
 		try {
-			// Get a Socket to the daytime service,
-			Socket client1 = new Socket("192.168.10.12", 1300);
+//			Socket client1 = new Socket("192.168.10.12", 1300);
+			Socket client1 = new Socket("localhost", 1300);
+
 			String serverMessage;
 			String userInput = null;
 			from_user = new Scanner(System.in);
 			from_server = new BufferedReader(new InputStreamReader(client1.getInputStream()));
 			to_server = new PrintWriter(client1.getOutputStream());
 			System.out.println("Connected with server " + client1.getInetAddress() + ":" + client1.getPort());
-
+			
 			while ((userInput == null) || !(userInput.equals("0"))) {
             	serverMessage = from_server.readLine();
+            	while(serverMessage ==  null) {
+                	serverMessage = from_server.readLine();
+            	}
             	if(serverMessage.equals("PUT")) {
             		transfer();
+            	} else {
+            		System.out.println(serverMessage);
+                	userInput = from_user.next();
+                	to_server.println(userInput);
+                	to_server.flush();
             	}
-            	System.out.println(serverMessage);
-            	userInput = from_user.next();
-            	to_server.println(userInput);
             }
 			
 			// Set the socket option just in case server stalls
 			client1.setSoTimeout(2000);
-			// Read from the server
-			// Close the connection
+
 			client1.close();
 		} catch (Exception e) {
 			System.out.println("Error" + e);
@@ -47,6 +52,7 @@ public class Client2 {
 	public static void transfer() {
 		String input;
 		try {
+			System.out.println("Transfer is running...");
 			
 			String username = System.getProperty("user.name");
 			to_server.println(username);

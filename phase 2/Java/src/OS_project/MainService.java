@@ -3,6 +3,7 @@ package OS_project;
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class MainService extends Thread {
 
@@ -33,7 +34,7 @@ public class MainService extends Thread {
 
 			if (index == 1) {
 				n1.addSocket(client);
-
+			}
 				while (n1.isAlive())
 					;
 
@@ -41,7 +42,7 @@ public class MainService extends Thread {
 				fromClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
 				System.out.println("Client "+index+ " Passed");
 
-				String ans;
+				String ans = null;
 				while (true) {
 					msgToClientFull = msgToClient2 + msgToClient1;
 					msgToClient2="";
@@ -54,9 +55,9 @@ public class MainService extends Thread {
 						if (requests.isEmpty() || ((System.currentTimeMillis() - requests.get(requests.size() - 1)) > COOLDOWN)) {
 							requests.add(System.currentTimeMillis());
 							// Run system.sh & send file
-							infoService.transferFile(client);
 							toClient.println("PUT");
 							toClient.flush();
+							infoService.transferFile(client);
 							
 							msgToClient2 = "Doing the thingy ";
 
@@ -70,7 +71,7 @@ public class MainService extends Thread {
 					}
 				}
 
-			}
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
