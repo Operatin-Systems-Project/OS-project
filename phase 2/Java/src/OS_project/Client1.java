@@ -1,4 +1,4 @@
-package os;
+package OS_project;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
