@@ -43,7 +43,7 @@ public class InfoService {
             
             Thread.sleep(500);
             session = jsch.getSession(clientusername, IP, 22);
-            to_server.println("Enter password: ");
+            to_server.println("Enter SFTP password: ");
             to_server.flush();
             
             password = from_client.readLine();
@@ -75,10 +75,10 @@ public class InfoService {
     
     public synchronized void printRequestLog(ArrayList<Long> requests) {
     	Date date = new Date(requests.get(0) + 300000);
-    	System.out.printf("[%s] Connection Established", format.format(date));
+    	System.out.printf("[%s] Connection Established\n", format.format(date));
     	for(int i = 1; i < requests.size(); i++) {
     		date.setTime(requests.get(i));
-    		System.out.printf("[%s] System info sent to client", format.format(date));
+    		System.out.printf("[%s] System info sent to client\n", format.format(date));
     	}
     }
 

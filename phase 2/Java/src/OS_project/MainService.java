@@ -66,7 +66,7 @@ public class MainService extends Thread {
 						break;
 					}
 				}
-				System.out.println("Client " + (index+1) + "Disconnecting...");
+				System.out.println("Client " + (index+1) + " Disconnecting...");
 				infoService.printRequestLog(requests);
 
 			
