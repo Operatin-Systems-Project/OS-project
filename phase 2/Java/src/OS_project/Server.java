@@ -22,6 +22,7 @@ public class Server {
 			infoService = new InfoService();
 			while (true) {
 				client = server.accept();
+				System.out.println("Established connection with Client "+ (clientIndex+1) + " (" + client.getInetAddress() +":"+ client.getPort()+")");
 				clientsRequests.add(new ArrayList<Long>());
 				if (n1 == null) {
 					n1 = new NetworkService(client);
@@ -46,5 +47,5 @@ public class Server {
 		}
 
 	}
-
-}
+	
+	}

@@ -27,9 +27,6 @@ public class Client1 {
             
             while ((userInput == null) || !(userInput.equals("0"))) {
                 serverMessage = from_server.readLine();
-                while(serverMessage ==  null) {
-                    serverMessage = from_server.readLine();
-                }
                 if(serverMessage.equals("PUT")) {
                     transfer();
                 } else {
@@ -51,26 +48,28 @@ public class Client1 {
 
     public static void transfer() {
         String input;
-        try {
-            System.out.println("Transfer is running...");
-            
+        try {            
             String username = System.getProperty("user.name");
             to_server.println(username);
             to_server.flush();
+            
             System.out.println(from_server.readLine());
             input = from_user.next();
             to_server.println(input);
             to_server.flush();
+            
             Thread.sleep(5000);
             ProcessBuilder catInfo = new ProcessBuilder("cat", "/home/vm2/info.txt");
             catInfo.redirectErrorStream(true);
             Process execCatInfo = catInfo.start();
             catoutput = new BufferedReader(new InputStreamReader(execCatInfo.getInputStream()));
             String OutputInfo = catoutput.readLine();
+            
             while (OutputInfo != null) {
                 System.out.println(OutputInfo);
                 OutputInfo = catoutput.readLine();
             }
+            
             catoutput.close();
             execCatInfo.waitFor();
         } catch (Exception e) {

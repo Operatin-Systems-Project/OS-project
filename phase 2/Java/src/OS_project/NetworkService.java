@@ -29,16 +29,16 @@ public class NetworkService extends Thread {
 			ProcessBuilder processBuilder = new ProcessBuilder("bash", script, client1ip.getHostAddress(),
 					client2ip.getHostAddress());
 			processBuilder.redirectErrorStream(true); // Combine standard error and output streams
-			Process NetwrokTest = processBuilder.start();
+			Process NetworkTest = processBuilder.start();
 
-			terminalReader = new BufferedReader(new InputStreamReader(NetwrokTest.getInputStream()));
+			terminalReader = new BufferedReader(new InputStreamReader(NetworkTest.getInputStream()));
 
 			String terminaloutput = terminalReader.readLine();
 			while (terminaloutput != null) {
 				System.out.println(terminaloutput);
 				terminaloutput = terminalReader.readLine();
 			}
-			NetwrokTest.waitFor();
+			NetworkTest.waitFor();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

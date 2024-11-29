@@ -8,7 +8,11 @@ import com.jcraft.jsch.SftpException;
 
 import java.io.*;
 import java.net.Socket;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Properties;
+import java.util.logging.SimpleFormatter;
 
 public class InfoService {
 
@@ -23,35 +27,35 @@ public class InfoService {
         String password = null;
         
         try {
-            // Initialize streams for communication with the client
-            
-            System.out.println("InfoService is running.....");
-            
+                     
             from_client = new BufferedReader(new InputStreamReader(nextClient.getInputStream()));
             to_server = new PrintWriter(nextClient.getOutputStream());
-
             
             clientusername=from_client.readLine();
+            
             File outputFile = new File("info.txt");
             ProcessBuilder SystemRunCommand = new ProcessBuilder("bash", "/home/vm1/System.sh");
             SystemRunCommand.redirectOutput(outputFile);
             SystemRunCommand.redirectErrorStream(true); // Combine standard error and output streams
             Process Systeminfo = SystemRunCommand.start();
             Systeminfo.waitFor();
+            
             Thread.sleep(500);
             session = jsch.getSession(clientusername, IP, 22);
             to_server.println("Enter password: ");
             to_server.flush();
+            
             password = from_client.readLine();
             session.setPassword(password);
+            
             Properties config = new Properties();
             config.put("StrictHostKeyChecking", "no");
             session.setConfig(config);
-            // Use SFTP to upload the System.sh file
-            //uploadFileViaSFTP(IP, "123", "/home/vm1/System.sh");
+
             session.connect();
             channelSftp = (ChannelSftp) session.openChannel("sftp");
             channelSftp.connect();
+            
             File file = new File("/home/vm1/info.txt");
             channelSftp.put(new FileInputStream(outputFile), outputFile.getName());
 
@@ -66,6 +70,17 @@ public class InfoService {
                 session.disconnect();
             }
         }
+    }
+    
+    public synchronized void printRequestLog(ArrayList<Long> requests) {
+    	SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss");
+    	Date date = new Date(requests.get(0) + 300000);
+    	format.format(date);
+    	System.out.println("[%s] Connection Established");
+    	for(int i = 1; i < requests.size(); i++) {
+    		date.setTime(requests.get(i));
+    		System.out.println("[%s] System info sent to client");
+    	}
     }
 
 

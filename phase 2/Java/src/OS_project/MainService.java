@@ -14,7 +14,7 @@ public class MainService extends Thread {
 	private NetworkService n1;
 	private int index;
 	private ArrayList<Long> requests;
-	private String msgToClient1 = "[1] Request System Info " + "[2] View request history";
+	private String msgToClient1 = "Request System Info? [Y to request, N to disconnect]";
 	private String msgToClient2 ="";
 	private String msgToClientFull;
 	InfoService infoService;
@@ -27,6 +27,7 @@ public class MainService extends Thread {
 		this.index = index;
 		this.requests = requests;
 		this.infoService = infoService;
+		requests.add(System.currentTimeMillis() + COOLDOWN);	
 	}
 
 	public void run() {
@@ -40,7 +41,6 @@ public class MainService extends Thread {
 
 				toClient = new PrintWriter(client.getOutputStream(), true);
 				fromClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
-				System.out.println("Client "+index+ " Passed");
 
 				String ans = null;
 				while (true) {
@@ -50,26 +50,24 @@ public class MainService extends Thread {
 					
 					ans = fromClient.readLine();
 
-					if (ans.equalsIgnoreCase("1")) {
+					if (ans.equalsIgnoreCase("Y")) {
 
-						if (requests.isEmpty() || ((System.currentTimeMillis() - requests.get(requests.size() - 1)) > COOLDOWN)) {
+						if ((System.currentTimeMillis() - requests.get(requests.size() - 1) > COOLDOWN)) {
 							requests.add(System.currentTimeMillis());
 							// Run system.sh & send file
 							toClient.println("PUT");
 							toClient.flush();
 							infoService.transferFile(client);
 							
-							msgToClient2 = "Doing the thingy ";
-
 						} else {
 							msgToClient2 = "You have to wait 5 mins before making that request again ";
 						}
-					} else if(ans.equalsIgnoreCase("2")) {
-						printRequestLog();
 					} else {
 						break;
 					}
 				}
+				System.out.println("Client " + (index+1) + "Disconnecting...");
+				infoService.printRequestLog(requests);
 
 			
 		} catch (Exception e) {
@@ -91,9 +89,4 @@ public class MainService extends Thread {
 		} // end of finally
 
 	} // end of run
-
-	public void printRequestLog() {
-		for(Long time : requests) 
-			System.out.printf("[%d] Requested System Info File\n", time);
-	}
 }
