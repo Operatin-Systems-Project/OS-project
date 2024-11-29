@@ -28,6 +28,7 @@ public class Client2 {
 			while ((userInput == null) || !(userInput.equals("0"))) {
             	serverMessage = from_server.readLine();
             	if(serverMessage.equals("PUT")) {
+                	System.out.println("Wait...");
             		transfer();
             	} else {
             		System.out.println(serverMessage);
