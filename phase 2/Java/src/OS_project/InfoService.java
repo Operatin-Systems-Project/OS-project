@@ -15,7 +15,8 @@ import java.util.Properties;
 import java.util.logging.SimpleFormatter;
 
 public class InfoService {
-
+	SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss");
+	
     public synchronized void transferFile(Socket nextClient) {
         String IP = nextClient.getInetAddress().getHostAddress();       
         BufferedReader from_client;
@@ -73,13 +74,11 @@ public class InfoService {
     }
     
     public synchronized void printRequestLog(ArrayList<Long> requests) {
-    	SimpleDateFormat format = new SimpleDateFormat("hh:mm:ss");
     	Date date = new Date(requests.get(0) + 300000);
-    	format.format(date);
-    	System.out.println("[%s] Connection Established");
+    	System.out.printf("[%s] Connection Established", format.format(date));
     	for(int i = 1; i < requests.size(); i++) {
     		date.setTime(requests.get(i));
-    		System.out.println("[%s] System info sent to client");
+    		System.out.printf("[%s] System info sent to client", format.format(date));
     	}
     }
 

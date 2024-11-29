@@ -27,7 +27,7 @@ public class MainService extends Thread {
 		this.index = index;
 		this.requests = requests;
 		this.infoService = infoService;
-		requests.add(System.currentTimeMillis() + COOLDOWN);	
+		requests.add(System.currentTimeMillis() - COOLDOWN);	
 	}
 
 	public void run() {
