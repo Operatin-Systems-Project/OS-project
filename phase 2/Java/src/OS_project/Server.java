@@ -1,34 +1,50 @@
 package OS_project;
+
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 
 public class Server {
-    private static ArrayList<Socket> myScokets = new ArrayList<>();  
-    public static void main(String args[]){
-        
-    try{
-        
-        ServerSocket server = new ServerSocket(1300);
-        System.out.println(server.getInetAddress().getHostAddress());
-        while(true){
-            do{
-                if (myScokets.size()<2)
-                 System.out.println("We Need Two clients to connect");
-                Socket Client = server.accept();
-                myScokets.add(Client);
-            }while(myScokets.size()<2);
-            System.out.println("Testing the connection to both clinets");
-            Netwrokservice N1 = new Netwrokservice(myScokets.get(0).getInetAddress(),myScokets.get(1).getInetAddress());
-            N1.start();
-             for (Socket client: myScokets){
-                client.close();
-            }
-            
-        }
-    }catch(IOException ioe){
-        System.out.println("Error" + ioe);
-    }
-   
-}
+	private static ArrayList<ArrayList<Long>> clientsRequests= new ArrayList<>();
+
+	public static void main(String args[]) {
+		ServerSocket server = null;
+		Socket client = null;
+		NetworkService n1 = null;
+		MainService mainService = null;
+		int clientIndex = 0;
+		InfoService infoService = null;
+		try {
+
+			server = new ServerSocket(1300);
+			System.out.println(server.getInetAddress().getHostAddress());
+			System.out.println("Server is up!");
+			infoService = new InfoService();
+			while (true) {
+				client = server.accept();
+				clientsRequests.add(new ArrayList<Long>());
+				if (n1 == null) {
+					n1 = new NetworkService(client);
+					n1.start();
+				}
+				mainService = new MainService(client, clientIndex, clientsRequests.get(clientIndex), n1, infoService);
+				mainService.start();
+				
+				clientIndex++;
+			}
+		} catch (IOException ioe) {
+			System.out.println("Error" + ioe);
+		} finally {
+			try {
+				if (server != null)
+					server.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+	}
+
 }

@@ -1,4 +1,4 @@
-package OS;
+package OS_project;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -10,28 +10,23 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Properties;
 
-public class infoservice extends Thread {
-    private Socket nextClient;
-    private PrintWriter to_client;
-    private BufferedReader from_client;
-    private String hostname;
-    private String IP;
-    private String clientusername;
-    JSch jsch = new JSch();
-    Session session = null;
-    ChannelSftp channelSftp = null;
-    public infoservice(Socket nextClient) {
-        this.nextClient = nextClient;
-        this.hostname = nextClient.getInetAddress().getHostName();
-        this.IP = nextClient.getInetAddress().getHostAddress();
-    }
+public class InfoService {
 
-    @Override
-    public synchronized void run() {
+    public synchronized void transferFile(Socket nextClient) {
+    	String IP = nextClient.getInetAddress().getHostAddress();		
+    	BufferedReader from_client;
+    	String clientusername;
+    	JSch jsch = new JSch();
+    	Session session = null;
+    	ChannelSftp channelSftp = null;
+    	PrintWriter to_server =  null;
+    	String password = null;
+    	
         try {
             // Initialize streams for communication with the client
-            to_client = new PrintWriter(nextClient.getOutputStream(), true);
             from_client = new BufferedReader(new InputStreamReader(nextClient.getInputStream()));
+			to_server = new PrintWriter(nextClient.getOutputStream());
+
             
             clientusername=from_client.readLine();
             File outputFile = new File("info.txt");
@@ -40,9 +35,11 @@ public class infoservice extends Thread {
             SystemRunCommand.redirectErrorStream(true); // Combine standard error and output streams
 			Process Systeminfo = SystemRunCommand.start();
 			Systeminfo.waitFor();
+			to_server.println("Enter password: ");
+			password = from_client.readLine();
 			Thread.sleep(500);
             session = jsch.getSession(clientusername, IP, 22);
-            session.setPassword("123");
+            session.setPassword(password);
             Properties config = new Properties();
             config.put("StrictHostKeyChecking", "no");
             session.setConfig(config);
