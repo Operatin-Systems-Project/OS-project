@@ -11,7 +11,7 @@ public class Client1 {
     static PrintWriter to_server = null;
     static BufferedReader catoutput = null;
     static Scanner from_user;
-    	 public  String runScript(String script) throws IOException {
+    	 public static  String runScript(String script) throws IOException {
 	    	ProcessBuilder pbNetwork = new ProcessBuilder("bash","/home/vm2/"+script);  
 	        pbNetwork.redirectErrorStream(true);  
 	        Process Networkprocess = pbNetwork.start();  
