@@ -11,30 +11,33 @@ public class Client1 {
     static PrintWriter to_server = null;
     static BufferedReader catoutput = null;
     static Scanner from_user;
-    	 public static  String runScript(String script) throws IOException {
-	    	ProcessBuilder pbNetwork = new ProcessBuilder("bash","/home/vm2/"+script);  
+    	 public static  void runLoginScript() throws IOException {
+	    	ProcessBuilder pbNetwork = new ProcessBuilder("bash","/home/vm2/login.sh");  
 	        pbNetwork.redirectErrorStream(true);  
 	        Process Networkprocess = pbNetwork.start();  
 	        BufferedReader read = new BufferedReader(new InputStreamReader(Networkprocess.getInputStream()));
-	        // String output = "";
-	         String line;
-	        // while ((line = read.readLine()) != null) {
-	        //     output=line+"\n";
-	        // }
 	        
-	        // return output;
-            StringBuilder output = new StringBuilder();
-            while ((line = read.readLine()) != null) {
-            output.append(line).append("\n");
-        }
-         return output.toString();
-
+	         String line;
+	        while ((line = read.readLine()) != null) {
+	            System.out.println(line);
+	        }
+	    }
+        public static  void runCheckScript() throws IOException {
+	    	ProcessBuilder pbNetwork = new ProcessBuilder("bash","/home/vm2/check.sh");  
+	        pbNetwork.redirectErrorStream(true);  
+	        Process Networkprocess = pbNetwork.start();  
+	        BufferedReader read = new BufferedReader(new InputStreamReader(Networkprocess.getInputStream()));
+	        
+	         String line;
+	        while ((line = read.readLine()) != null) {
+	            System.out.println(line);
+	        }
 	    }
     public static void main(String args[]) {
 
         try {
-               System.out.println(runScript("login.sh"));
-	        	System.out.println(runScript("check.sh"));
+               runLoginScript();
+	        	runCheckScript();
             Socket client1 = new Socket("192.168.10.12", 1300);
             //Socket client1 = new Socket("localhost", 1300);
             String serverMessage;
