@@ -16,13 +16,19 @@ public class Client1 {
 	        pbNetwork.redirectErrorStream(true);  
 	        Process Networkprocess = pbNetwork.start();  
 	        BufferedReader read = new BufferedReader(new InputStreamReader(Networkprocess.getInputStream()));
-	        String output = "";
-	        String line;
-	        while ((line = read.readLine()) != null) {
-	            output=line+"\n";
-	        }
+	        // String output = "";
+	         String line;
+	        // while ((line = read.readLine()) != null) {
+	        //     output=line+"\n";
+	        // }
 	        
-	        return output;
+	        // return output;
+            StringBuilder output = new StringBuilder();
+            while ((line = read.readLine()) != null) {
+            output.append(line).append("\n");
+        }
+         return output.toString();
+
 	    }
     public static void main(String args[]) {
 
