@@ -2,6 +2,7 @@ package OS_project;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
@@ -11,38 +12,34 @@ public class Client1 {
     static PrintWriter to_server = null;
     static BufferedReader catoutput = null;
     static Scanner from_user;
-    	 public static  void runLoginScript() throws IOException {
-	    	ProcessBuilder pbNetwork = new ProcessBuilder("bash","/home/vm2/login.sh");  
-	        pbNetwork.redirectErrorStream(true);  
-	        Process Networkprocess = pbNetwork.start(); 
-            OutputStreamWriter writer = new OutputStreamWriter(Networkprocess.getOutputStream()) ;
-             Scanner kb=new Scanner(System.in);
-            String username=kb.readLine();
-            writer.write(username + "\n");
-            writer.flush();  // Ensure all data is sent
-	        BufferedReader read = new BufferedReader(new InputStreamReader(Networkprocess.getInputStream()));
-	        
-	         String line;
-	        while ((line = read.readLine()) != null) {
-	            System.out.println(line);
-	        }
-	    }
-        public static  void runCheckScript() throws IOException {
-	    	ProcessBuilder pbNetwork = new ProcessBuilder("bash","/home/vm2/check.sh");  
-	        pbNetwork.redirectErrorStream(true);  
-	        Process Networkprocess = pbNetwork.start();  
-	        BufferedReader read = new BufferedReader(new InputStreamReader(Networkprocess.getInputStream()));
-	        
-	         String line;
-	        while ((line = read.readLine()) != null) {
-	            System.out.println(line);
-	        }
-	    }
     public static void main(String args[]) {
 
         try {
-               runLoginScript();
-	        	runCheckScript();
+            String login="/home/vm2/Desktop/vm2/login.sh";
+            String check= "/home/vm2/Desktop/vm2/check.sh";
+            threadd th=new threadd(login, "login");
+            Thread loginThread = new Thread(th);
+            Thread checkThread = new Thread(new threadd(check, "check"));
+            loginThread.start();
+            Scanner usernameScanner = new Scanner(System.in);
+            System.out.print("Enter username: ");
+            String username = usernameScanner.nextLine().trim();
+            OutputStream out = th.getProcess().getOutputStream();
+            out.write((username + "\n").getBytes());
+            out.flush();
+            Thread.sleep(1000);
+
+            Scanner passwordScanner = new Scanner(System.in);
+            System.out.print("Enter password: ");
+            String password = passwordScanner.nextLine().trim();
+            out.write((password + "\n").getBytes());
+            out.flush();
+
+
+            loginThread.join();
+            checkThread.start();
+            checkThread.join();
+;
             Socket client1 = new Socket("192.168.10.12", 1300);
             //Socket client1 = new Socket("localhost", 1300);
             String serverMessage;
