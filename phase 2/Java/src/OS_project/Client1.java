@@ -14,7 +14,12 @@ public class Client1 {
     	 public static  void runLoginScript() throws IOException {
 	    	ProcessBuilder pbNetwork = new ProcessBuilder("bash","/home/vm2/login.sh");  
 	        pbNetwork.redirectErrorStream(true);  
-	        Process Networkprocess = pbNetwork.start();  
+	        Process Networkprocess = pbNetwork.start(); 
+            OutputStreamWriter writer = new OutputStreamWriter(Networkprocess.getOutputStream()) ;
+             Scanner kb=new Scanner(System.in);
+            String username=kb.readLine();
+            writer.write(username + "\n");
+            writer.flush();  // Ensure all data is sent
 	        BufferedReader read = new BufferedReader(new InputStreamReader(Networkprocess.getInputStream()));
 	        
 	         String line;
