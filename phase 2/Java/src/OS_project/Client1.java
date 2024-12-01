@@ -1,7 +1,9 @@
-package OS_project;
+
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
@@ -11,38 +13,14 @@ public class Client1 {
     static PrintWriter to_server = null;
     static BufferedReader catoutput = null;
     static Scanner from_user;
-    	 public static  void runLoginScript() throws IOException {
-	    	ProcessBuilder pbNetwork = new ProcessBuilder("bash","/home/vm2/login.sh");  
-	        pbNetwork.redirectErrorStream(true);  
-	        Process Networkprocess = pbNetwork.start(); 
-            OutputStreamWriter writer = new OutputStreamWriter(Networkprocess.getOutputStream()) ;
-             Scanner kb=new Scanner(System.in);
-            String username=kb.readLine();
-            writer.write(username + "\n");
-            writer.flush();  // Ensure all data is sent
-	        BufferedReader read = new BufferedReader(new InputStreamReader(Networkprocess.getInputStream()));
-	        
-	         String line;
-	        while ((line = read.readLine()) != null) {
-	            System.out.println(line);
-	        }
-	    }
-        public static  void runCheckScript() throws IOException {
-	    	ProcessBuilder pbNetwork = new ProcessBuilder("bash","/home/vm2/check.sh");  
-	        pbNetwork.redirectErrorStream(true);  
-	        Process Networkprocess = pbNetwork.start();  
-	        BufferedReader read = new BufferedReader(new InputStreamReader(Networkprocess.getInputStream()));
-	        
-	         String line;
-	        while ((line = read.readLine()) != null) {
-	            System.out.println(line);
-	        }
-	    }
     public static void main(String args[]) {
 
         try {
-               runLoginScript();
-	        	runCheckScript();
+            runterminal();
+            String check= "/home/vm2/Desktop/vm2/check.sh";
+            Thread checkThread = new Thread(new threadd(check, "check"));
+            checkThread.start();
+            checkThread.join();
             Socket client1 = new Socket("192.168.10.12", 1300);
             //Socket client1 = new Socket("localhost", 1300);
             String serverMessage;
@@ -51,11 +29,11 @@ public class Client1 {
             from_server = new BufferedReader(new InputStreamReader(client1.getInputStream()));
             to_server = new PrintWriter(client1.getOutputStream());
             System.out.println("Connected with server " + client1.getInetAddress() + ":" + client1.getPort());
-            
+
             while ((userInput == null) || !(userInput.equals("0"))) {
                 serverMessage = from_server.readLine();
                 if(serverMessage.equals("PUT")) {
-                	System.out.println("Wait...");
+                    System.out.println("Wait...");
                     transfer();
                 } else {
                     System.out.println(serverMessage);
@@ -64,7 +42,7 @@ public class Client1 {
                     to_server.flush();
                 }
             }
-            
+
             // Set the socket option just in case server stalls
             client1.setSoTimeout(2000);
 
@@ -76,31 +54,52 @@ public class Client1 {
 
     public static void transfer() {
         String input;
-        try {            
+        try {
             String username = System.getProperty("user.name");
             to_server.println(username);
             to_server.flush();
-            
+
             System.out.println(from_server.readLine());
             input = from_user.next();
             to_server.println(input);
             to_server.flush();
-            
+
             Thread.sleep(5000);
             ProcessBuilder catInfo = new ProcessBuilder("cat", "/home/vm2/info.txt");
             catInfo.redirectErrorStream(true);
             Process execCatInfo = catInfo.start();
             catoutput = new BufferedReader(new InputStreamReader(execCatInfo.getInputStream()));
             String OutputInfo = catoutput.readLine();
-            
+
             while (OutputInfo != null) {
                 System.out.println(OutputInfo);
                 OutputInfo = catoutput.readLine();
             }
-            
+
             catoutput.close();
             execCatInfo.waitFor();
         } catch (Exception e) {
         }
     }
-}
+        public static void runterminal() {
+            try {
+                // Command to open a new terminal and run the script
+                String[] command = {
+                        "gnome-terminal", // Or "xterm", "konsole", etc.
+                        "--",             // Separator for arguments
+                        "bash",           // Shell to run the script
+                        "-c",             // Command flag
+                        "/home/vm2/Desktop/vm2/login.sh; exec bash" // Run script and keep terminal open
+                };
+
+                // Start the process
+                ProcessBuilder pb = new ProcessBuilder(command);
+                pb.start();
+
+                System.out.println("Script is running in a new terminal.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
