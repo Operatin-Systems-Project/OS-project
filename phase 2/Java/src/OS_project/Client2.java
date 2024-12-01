@@ -15,8 +15,8 @@ public class Client2 {
     public static void main(String args[]) {
 
         try {
-            String Clientinfo="/home/vm2/Desktop/Clientinfo.sh";
-            String Search= "/home/vm2/Desktop/vm2/Search.sh";
+            String Clientinfo="/home/vm3/Desktop/vm3/Clientinfo.sh";
+            String Search= "/home/vm3/Desktop/vm3/Search.sh";
             Thread clientInfoThread = new Thread(new threadd(Clientinfo, "Clientinfo"));
             Thread searchThread = new Thread(new threadd(Search, "Search"));
             clientInfoThread.start();
@@ -85,3 +85,4 @@ public class Client2 {
         }
     }
 }
+

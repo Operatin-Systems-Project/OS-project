@@ -18,5 +18,6 @@ if [ -s "$output_file" ]; then
     echo ""
     echo "$results"
   } | sendmail "$recipient" 2> /dev/null
+  echo "File sent to $recipient"
 fi
 
