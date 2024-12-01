@@ -14,7 +14,7 @@ file_count=$(echo "$results" |wc -l )
 if [ -s "$output_file" ]; then
   {
     echo "To: $recipient"
-    echo "Subject: $file_count Files larger than 1MB found on VM2 on $search_date"
+    echo "Subject: $file_count Files larger than 1MB found on VM3 on $search_date"
     echo ""
     echo "$results"
   } | sendmail "$recipient" 2> /dev/null

@@ -4,19 +4,22 @@ import java.io.InputStreamReader;
 
 
 class threadd extends Thread{
-    private String inp;
+    private String path;
     private String name;
+    Process process;
 
-    public threadd(String inp, String name){
-        this.inp = inp;
+    public threadd(String path, String name){
+        this.path = path;
         this.name = name;
     }
+    public Process getProcess(){
+        return process;
+    }
     public void run(){
-        ProcessBuilder builder=new ProcessBuilder();
+        ProcessBuilder builder=new ProcessBuilder(path);
         builder.redirectErrorStream(true);
-        builder.command("bash", "-c", "stdbuf -oL " + inp + " 2>&1");
         try{
-            Process process = builder.start();
+            process = builder.start();
 
             try(BufferedReader buff=new BufferedReader(new  InputStreamReader(process.getInputStream()))) {
 
@@ -42,4 +45,3 @@ class threadd extends Thread{
 
     }
 }
-
